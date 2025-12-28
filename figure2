@@ -1,0 +1,10 @@
+import pandas as pd
+
+lep = pd.read_csv("data/processed/geo_lep_clean.csv")
+
+print("Shape:", lep.shape)
+print("Achievement rate range:",
+      lep["achievement_rate"].min(),
+      lep["achievement_rate"].max())
+print("Unique LEPs:",
+      lep["local_enterprise_partnership_name"].nunique())

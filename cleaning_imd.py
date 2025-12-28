@@ -35,6 +35,27 @@ imd_clean.loc[mask_nonzero, "dropoff_rate"] = 1 - imd_clean.loc[mask_nonzero, "a
 
 imd_clean.loc[~mask_nonzero, ["achievement_rate", "dropoff_rate"]] = None
 
+# --- Remove Total and Unknown rows ---
+imd_clean = imd_clean[
+    ~imd_clean["learner_home_depriv"].isin(["Total", "Unknown"])
+].copy()
+
+imd_clean["imd_quintile"] = (
+    imd_clean["learner_home_depriv"]
+    .str.extract(r"^(One|Two|Three|Four|Five)")
+    .replace({
+        "One": 1,
+        "Two": 2,
+        "Three": 3,
+        "Four": 4,
+        "Five": 5,
+    })
+    .astype(int)
+)
+
+# Sort from most → least deprived
+imd_clean = imd_clean.sort_values("imd_quintile")
+
 print(imd_clean)
 
 Path("data/processed").mkdir(parents=True, exist_ok=True)
