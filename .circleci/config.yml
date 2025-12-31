@@ -10,6 +10,9 @@ jobs:
           name: Install dependencies
           command: pip install pytest
       - run:
+          name: Install dependencies
+          command: pip install pandas
+      - run:
           name: Run tests
           command: pytest test.py
 
