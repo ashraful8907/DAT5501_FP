@@ -11,7 +11,7 @@ jobs:
           command: pip install pytest
       - run:
           name: Run tests
-          command: pytest unit_testing.py
+          command: pytest test.py
 
 workflows:
   version: 2
