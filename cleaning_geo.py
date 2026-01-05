@@ -15,7 +15,7 @@ geo_raw = pd.read_csv(
 
 geo = geo_raw.copy()
 
-# Standardise column names
+# Standardising column names
 geo.columns = geo.columns.str.lower().str.strip().str.replace(" ", "_")
 
 # Checking
@@ -23,7 +23,7 @@ print("Columns:", geo.columns.tolist())
 print("Unique time_period:", geo["time_period"].unique())
 print("Unique geographic_level:", geo["geographic_level"].unique())
 
-# Build filter mask carefully
+# Building filter mask 
 mask = geo["time_period"].astype(str).eq("202425")
 mask &= geo["geographic_level"] == "Local enterprise partnership"
 mask &= geo["ethnicity_major"] == "Total"
@@ -55,8 +55,8 @@ geo_clean = (
 )
 
 # Compute achievement_rate and dropoff_rate
-# avoid division by zero
-mask_nonzero = geo_clean["starts"] > 0
+
+mask_nonzero = geo_clean["starts"] > 0 # avoid division by zero
 
 geo_clean.loc[mask_nonzero, "achievement_rate"] = (
     geo_clean.loc[mask_nonzero, "achievements"] / geo_clean.loc[mask_nonzero, "starts"]
