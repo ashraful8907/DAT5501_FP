@@ -7,6 +7,8 @@ Performance decision:
 """
 
 from pathlib import Path
+from typing import List
+
 import pandas as pd
 import pytest
 
@@ -31,8 +33,8 @@ def imd_df() -> pd.DataFrame:
     return pd.read_csv(IMD_PATH)
 
 
-# Helper assertions 
-def assert_required_columns(df: pd.DataFrame, required: list[str], name: str) -> None:
+# Helper assertions
+def assert_required_columns(df: pd.DataFrame, required: List[str], name: str) -> None:
     missing = [c for c in required if c not in df.columns]
     assert not missing, f"{name} missing columns: {missing}"
 
@@ -45,7 +47,7 @@ def assert_numeric_series(df: pd.DataFrame, col: str) -> pd.Series:
         raise AssertionError(f"Column '{col}' should be numeric but isn't: {e}") from e
 
 
-# GEO (LEP) tests 
+# GEO (LEP) tests
 def test_geo_schema_and_rows(geo_df: pd.DataFrame):
     """Schema checks prevent silent downstream errors in figures/models."""
     assert len(geo_df) > 0, "geo_lep_clean.csv is empty"
@@ -105,7 +107,7 @@ def test_geo_lep_codes_unique(geo_df: pd.DataFrame):
     assert codes.is_unique, "LEP codes are not unique"
 
 
-# IMD tests 
+# IMD tests
 def test_imd_schema_and_quintiles(imd_df: pd.DataFrame):
     """IMD dataset must represent exactly 5 deprivation quintiles."""
     required = ["imd_quintile", "starts", "achievements", "achievement_rate", "dropoff_rate"]
@@ -122,6 +124,7 @@ def test_imd_counts_and_rates_valid(imd_df: pd.DataFrame):
     """Same integrity rules as LEP dataset: valid counts and probability rates."""
     starts = assert_numeric_series(imd_df, "starts")
     ach = assert_numeric_series(imd_df, "achievements")
+
     assert (starts >= 0).all(), "IMD starts has negative values"
     assert (ach >= 0).all(), "IMD achievements has negative values"
     assert (ach <= starts).all(), "IMD has achievements > starts"
@@ -139,6 +142,7 @@ def test_imd_achievement_rate_correct(imd_df: pd.DataFrame):
 
     mask = starts > 0
     expected = ach[mask] / starts[mask]
+
     assert (rate[mask] - expected).abs().max() < 1e-6, (
         "IMD achievement_rate does not match achievements/starts"
     )
@@ -154,8 +158,8 @@ def test_model_outputs_exist():
     assert LONDON_OUT_PATH.exists(), f"Missing {LONDON_OUT_PATH}. Run london.py"
 
 
-def test_model_outputs_have_expected_columns():
-    """Schema checks for model output tables to keep reporting consistent."""
+def test_model_outputs_have_rows_if_present():
+    """Lightweight sanity checks that model output tables are not empty."""
     if MODEL_OUT_PATH.exists():
         df = pd.read_csv(MODEL_OUT_PATH)
         assert len(df) > 0, "lep_model_results_with_glm.csv is empty"
