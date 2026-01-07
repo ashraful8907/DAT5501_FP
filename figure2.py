@@ -14,10 +14,6 @@ plt.xlabel("Apprenticeship starts (LEP, 2024/25)")
 plt.ylabel("Achievement rate")
 plt.title("LEP apprenticeship starts vs achievement rate (England, 2024/25)")
 
-# Optional: log scale if one LEP (e.g., London) dominates the x-axis
-# plt.xscale("log")
-# plt.xlabel("Apprenticeship starts (log scale)")
-
 plt.tight_layout()
 
 Path("outputs/figures").mkdir(parents=True, exist_ok=True)
