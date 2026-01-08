@@ -16,6 +16,7 @@ The workflow is:
 
 ## Repository structure
 
+```text
 DAT5501_FP/
 ├── .circleci/
 │   └── config.yml
@@ -55,6 +56,7 @@ DAT5501_FP/
 ├── test.py
 ├── requirements.txt
 └── README.md
+```text
 
 ## Data inputs
 
